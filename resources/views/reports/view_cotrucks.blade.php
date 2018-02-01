@@ -222,17 +222,20 @@
                              $product =DB::table('products')->where('product_id',$order->product_id )->first();
                             
 
-                             echo "<td>".$customer->customer_name."</td>";
-                             echo "<td>".$product->product_name."</td>";
+                             if(is_null($customer)){
+                              echo "<td>".$order->customer_id." ไม่มีข้อมูล </td>";
+                             } else {
+                              echo "<td>".$customer->customer_name."</td>";
+                             }
 
-                             // if(is_null($order->distance)){
 
-                             //    echo "<td><li><a href=".url('/definedistance/'.$order->id).">กำหนด</a></li></td>";
 
-                             // }else{
+                             if(is_null($product)){
+                              echo "<td>".$order->product_id." ไม่มีข้อมูล </td>";
+                             } else {
+                              echo "<td>".$product->product_name."</td>";
+                             }
 
-                             //    echo "<td>".number_format($order->distance)."</td>";
-                             // }
                              
                              
                             
@@ -241,35 +244,32 @@
                              echo "<td>".number_format($order->total_weight)."</td>";
                              echo "<td>".$order->unit."</td>";
 
-                             $carryprice=DB::table('carries')->where([['customer_id',$order->customer_id],['product_id',$order->product_id]])->first();
+                             $carryprice=DB::table('carries')->where([['customer_id',$order->customer_id],['product_type',$product->product_type]])->first();
+
+                             $carryValue=DB::table('carry_values')->where('carry_id',$carryprice->id)->first();
 
                              if($order->is_carry==0){
                                 
-                                if(is_null($carryprice->notcarry_price)){
-                                    echo "<td>
-                                <li><a href=".url('/report/cotrucks/defineprice/edit/'.$carryprice->id).">กำหนดราคา</a></li>
-                                </td>";
+                                if(is_null($carryValue)){
+                                    echo "<td>ไม่ได้กำหนด</td>";
                                     echo "<td>-</td>";
-
                                 } else{
-                                    echo "<td>".$carryprice->notcarry_price."(ไม่แบก)</td>";
-                                    echo "<td>".number_format($carryprice->notcarry_price*$order->unit)."</td>";
+                                    echo "<td>".$carryValue->notcarry_price."(ไม่แบก)</td>";
+                                    echo "<td>".number_format($carryValue->notcarry_price*$order->unit)."</td>";
 
-                                    $total_price=$total_price+($carryprice->notcarry_price*$order->unit);
+                                    $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
                                 }
 
                             
 
                             } else{
-                                if(is_null($carryprice->carry_price)){
-                                    echo "<td>
-                                <li><a href=".url('/report/cotrucks/defineprice/edit/'.$carryprice->id).">กำหนดราคา</a></li>
-                                </td>";
+                                if(is_null($carryValue)){
+                                    echo "<td>ไม่ได้กำหนด</td>";
                                     echo "<td>-</td>";
                                 } else{
-                                    echo "<td>".$carryprice->notcarry_price."(แบก)</td>";
-                                    echo "<td>".number_format($carryprice->carry_price*$order->unit)."</td>";
-                                    $total_price=$total_price+($carryprice->notcarry_price*$order->unit);
+                                    echo "<td>".$carryValue->notcarry_price."(แบก)</td>";
+                                    echo "<td>".number_format($carryValue->carry_price*$order->unit)."</td>";
+                                    $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
                                 }
                             }
                              

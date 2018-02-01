@@ -58,13 +58,13 @@
                 <ul class="nav navbar-nav">
                     <!-- Authentication Links -->
                     @if (Auth::guest())
-                        <li><a href="{{ url('/home') }}">Home</a></li>
+                        <li><a href="{{ url('/') }}">Home</a></li>
                     @else
-                    <li><a href="{{ url('/home') }}">Home</a></li>
+                    <li><a href="{{ url('/') }}">Home</a></li>
                         <li><a href="{{ url('/uploadfile') }}">อัพเดตข้อมูลรายการ</a></li>
                         <li><a href="{{ url('/uploadproduct') }}">อัพเดตสินค้า</a></li>
                         <li><a href="{{ url('/uploadcustomer') }}">อัพเดตรายชื่อลูกค้า</a></li>
-                        <li><a href="{{ url('/defineprice') }}">กำหนดราคา</a></li>
+                        <li><a href="{{ url('/uploadprice') }}">อัพเดตราคา</a></li>
                         <!-- <li><a href="{{ url('/report') }}">ดูรายงาน</a></li> -->
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -74,7 +74,6 @@
                             <ul class="dropdown-menu" role="menu">
                                 <li><a href="{{ url('/report/license') }}">รายงานตามทะเบียนรถ</a></li>
                                   <li><a href="{{ url('/report/cotrucks') }}">รายงานทะเบียนรถร่วม</a></li>
-                                <li><a href="{{ url('/report') }}">รายงานประจำวัน/เดือน</a></li> 
 
 
 
@@ -96,8 +95,7 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('/uploadfile') }}">อัพโหลดไฟล์</a></li>
-
+                        
                                 <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li> 
 
 

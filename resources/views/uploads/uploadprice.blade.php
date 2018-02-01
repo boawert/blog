@@ -30,13 +30,22 @@
 
 use Maatwebsite\Excel\Facades\Excel;
 use App\Order;
+use App\Carry_Value;
 use App\Carry;
+
+                        function getProductTypeTrans($id){
+
+                            if($id==="1"){return "หิน";} 
+                            else if($id==="2"){return "ทราย";} 
+                            else if($id==="3"){return "ยาง";} 
+                            else {return "0";}
+                        }
 
 
                 //         $orders=DB::table('orders')
                 // ->orderBy('checkout_id', 'asc')
                 // ->get();
-                        $prices=Carry::orderBy('id','asc')->paginate(20);
+                        $prices=Carry_Value::orderBy('carry_id','asc')->paginate(20);
                         $prices->setPath('/uploadprice');
                         
                         if(!is_null($prices) && file_exists('public/datafiles/price.xls')){
@@ -73,7 +82,7 @@ use App\Carry;
                             echo "<table class='table_style'>";
                             echo "<tr>";
                             echo "<th>ชื่อลูกค้า</th>";
-                            echo "<th>ประเภทสิทนค้า</th>";
+                            echo "<th>ประเภทสินค้า</th>";
                             echo "<th>ราคาแบก</th>";
                             echo "<th>ราคาไม่แบก</th>"; 
                             
@@ -81,60 +90,39 @@ use App\Carry;
                             echo "</tr>";
                         
 
-                            // foreach ($prices as $price) {
-                            //  echo "<tr>";
-                            //  echo "<td>".$order->license_plate."</td>";
-                            //  echo "<td>"."000".$order->checkout_id."</td>";
-                            //  echo "<td>".$order->transaction_id."</td>"; 
-                            //  echo "<td>".(string)date("d/m/Y", strtotime(str_replace('/', '-', explode(" ",$order->date)[0])))."</td>";
-                            //  echo "<td>".$order->time."</td>";
+                            foreach ($prices as $price) {
+                             echo "<tr>";
 
-                            //  $customer =DB::table('customers')->where('customer_id',$order->customer_id )->first();
-                            //  $product =DB::table('products')->where('product_id',$order->product_id )->first();
-                            // if(is_null($customer)){
-                            //     echo "<td>".$order->customer_id." (ไม่มีข้อมูลชื่อลูกค้า) </td>";
-                            // } else {
-                            //     echo "<td>".$customer->customer_name."</td>";
-                            // }
+                             $carry =DB::table('carries')->where('id',$price->carry_id )->first();
+                            if(is_null($carry)){
 
-                            // if(is_null($product)){
-                            //     echo "<td>".$order->product_id." (ไม่มีข้อมูลชื่อสินค้า) </td>";
-                            // } else {
-                            //     echo "<td>".$product->product_name."</td>";
-                            // }
+                                echo "<td> (ไม่มีข้อมูล) </td>";
+                                echo "<td> (ไม่มีข้อมูล) </td>";
 
+                            } else {
+                                $customer =DB::table('customers')->where('customer_id',$carry->customer_id )->first();
+                                echo "<td>".$customer->customer_name."</td>";
+                                echo "<td>".getProductTypeTrans($carry->product_type)."</td>";
 
-                            //  if(is_null($order->distance)){
+                            }
 
-                            //     echo "<td><li><a href=".url('/definedistance/'.$order->id).">กำหนด</a></li></td>";
-
-                            //  }else{
-
-                            //     echo "<td>".number_format($order->distance)."</td>";
-                            //  }
-                             
-                             
-                            
-                            //  echo "<td>".number_format($order->car_weight)."</td>";
-                            //  echo "<td>".number_format($order->all_weight)."</td>";
-                            //  echo "<td>".number_format($order->total_weight)."</td>";
-                            //  echo "<td>".$order->unit."</td>";
-
-                            //  if($order->is_carry==0){
+                            if(is_null($price->carry_price)){
+                                echo "<td> (ไม่มีข้อมูล) </td>";
                                 
-                            //     echo "<td>ไม่แบก</td>";
+                            }else {
+                                echo "<td>".$price->carry_price."</td>";
+                            }
 
-                            
+                            if(is_null($price->notcarry_price)){
+                                echo "<td> (ไม่มีข้อมูล) </td>";
+                                
+                            }else {
+                                echo "<td>".$price->notcarry_price."</td>";
+                            }
 
-                            // } else{
-                            //     echo "<td>แบก</td>";
-                            // }
-                             
+                             echo "</tr>";
 
-
-
-                            //  echo "</tr>";
-                            // }
+                            }
 
 
 
