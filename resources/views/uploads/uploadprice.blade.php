@@ -83,6 +83,7 @@ use App\Carry;
                             echo "<tr>";
                             echo "<th>ชื่อลูกค้า</th>";
                             echo "<th>ประเภทสินค้า</th>";
+                            echo "<th>เดือนปี</th>";
                             echo "<th>ราคาแบก</th>";
                             echo "<th>ราคาไม่แบก</th>"; 
                             
@@ -105,6 +106,8 @@ use App\Carry;
                                 echo "<td>".getProductTypeTrans($carry->product_type)."</td>";
 
                             }
+
+                            echo "<td>".$price->year_month."</td>";
 
                             if(is_null($price->carry_price)){
                                 echo "<td> (ไม่มีข้อมูล) </td>";

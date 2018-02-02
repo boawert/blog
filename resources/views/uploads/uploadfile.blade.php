@@ -79,7 +79,7 @@ use App\Customer;
                             echo "<th>เวลา</th>"; 
                             echo "<th>ลูกค้า</th>"; 
                             echo "<th>สินค้า</th>"; 
-                            echo "<th>ระยะทาง(กม)</th>";
+                            //echo "<th>ระยะทาง(กม)</th>";
                             echo "<th>นน.รถ</th>"; 
                             echo "<th>นน.รวม</th>";     
                             echo "<th>นน.สุทธิ</th>";   
@@ -112,14 +112,14 @@ use App\Customer;
                             }
 
 
-                             if(is_null($order->distance)){
+                             // if(is_null($order->distance)){
 
-                                echo "<td><li><a href=".url('/definedistance/'.$order->id).">กำหนด</a></li></td>";
+                             //    echo "<td><li><a href=".url('/definedistance/'.$order->id).">กำหนด</a></li></td>";
 
-                             }else{
+                             // }else{
 
-                                echo "<td>".number_format($order->distance)."</td>";
-                             }
+                             //    echo "<td>".number_format($order->distance)."</td>";
+                             // }
                              
                              
                             

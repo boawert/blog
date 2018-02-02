@@ -114,10 +114,11 @@
         if($from===$to){
                                     $datetime=str_replace('/', '-', $from);
                                     $dt=date("Y/m/d", strtotime($datetime));
+
           $orders=DB::table('orders')
                 ->whereBetween('license_plate',[$license,$license2])
                 ->where('date', 'LIKE', '%' .$dt. '%')
-                ->orderBy('license_plate', 'asc')
+                ->orderBy('checkout_id', 'asc')
                 ->get();
                 if($license===$license2){
                   $view_license_data=$license;
@@ -126,7 +127,7 @@
                 }
                 
           echo '<div class="report_center" >
-              <h2>บริษัท สหศิลาเลย จำกัด</h2><br>รายงานค่าขนส่งของรถทะเบียน '.$view_license_data.' วันที่ '.$from.'</div>';
+              <h2>บริษัท สหศิลาเลย จำกัด</h2><br>รายงานค่าขนส่งของรถทะเบียน '.$view_license_data.' วันที่ '.$from.' *ไม่รวมรายการเงินสด</div>';
 
                                           
 
@@ -141,7 +142,7 @@
         $orders=DB::table('orders')
                 ->whereBetween('license_plate',[$license,$license2])
                 ->whereBetween('date',[$dt." 00:00:01",$dt2." 23:59:59"])
-                ->orderBy('license_plate', 'asc')
+                ->orderBy('checkout_id', 'asc')
                 ->get();
 
             if($license===$license2){
@@ -151,7 +152,7 @@
                 }
 
         echo '<div class="report_center" >
-              <h2>บริษัท สหศิลาเลย จำกัด</h2><br>รายงานค่าขนส่งของรถทะเบียน '.$view_license_data.' วันที่ '.$from.' - '.$to.'</div>';
+              <h2>บริษัท สหศิลาเลย จำกัด</h2><br>รายงานค่าขนส่งของรถทะเบียน '.$view_license_data.' วันที่ '.$from.' - '.$to.' *ไม่รวมรายการเงินสด</div>';
 
 
       }
@@ -178,7 +179,8 @@
                             $total_price=0;
 
                             foreach ($orders as $order) {
-                             echo "<tr>";
+                              if($order->customer_id!=='9'){
+                                echo "<tr>";
                              echo "<td>".$order->license_plate."</td>";
                              echo "<td>"."000".$order->checkout_id."</td>";
                              echo "<td>".$order->transaction_id."</td>"; 
@@ -232,7 +234,7 @@
                                     echo "<td>-</td>";
                                 } else{
                                     echo "<td>".$carryValue->notcarry_price."(ไม่แบก)</td>";
-                                    echo "<td>".number_format($carryValue->notcarry_price*$order->unit)."</td>";
+                                    echo "<td>".$carryValue->notcarry_price*$order->unit."</td>";
 
                                     $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
                                 }
@@ -245,7 +247,7 @@
                                     echo "<td>-</td>";
                                 } else{
                                     echo "<td>".$carryValue->notcarry_price."(แบก)</td>";
-                                    echo "<td>".number_format($carryValue->carry_price*$order->unit)."</td>";
+                                    echo "<td>".$carryValue->carry_price*$order->unit."</td>";
                                     $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
                                 }
                             }
@@ -253,7 +255,8 @@
 
 
 
-                             echo "</tr>";
+                             echo "</tr>";}
+                             
                             }
 
                             echo "<tr>";
@@ -269,7 +272,7 @@
                             echo "<td></td>";
                             echo "<td></td>";
                             echo "<td><b>ราคารวม</b></td>";
-                            echo "<td>".number_format($total_price)."</td>";
+                            echo "<td>".$total_price."</td>";
                             echo "</tr>";
 
 
