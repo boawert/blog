@@ -22,7 +22,8 @@ Route::get('/home', 'HomeController@index');
 Route::get('/uploadfile','uploadController@index');
 Route::post('/store','uploadController@store');
 
-
+Route::get('/additionalreports','AdditionalReportsController@index');
+Route::post('/storeadditionalreports','AdditionalReportsController@store');
 
 
 Route::get('/uploadproduct','UploadProductController@index');

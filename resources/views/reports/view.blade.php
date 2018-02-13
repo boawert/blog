@@ -13,12 +13,7 @@
                 <div class="panel-body">
 
 
-                <?php 
-            
-
-
-
-?>
+                
                     <form action="/report/license/result" method="post" enctype="multipart/form-data">
                             {{csrf_field()}}
 
@@ -112,17 +107,19 @@
                                  ";   
 
         if($from===$to){
-                                    $datetime=str_replace('/', '-', $from);
-                                    $dt=date("Y/m/d", strtotime($datetime));
+          $datetime=str_replace('/', '-', $from);
+          $dt=date("Y/m/d", strtotime($datetime));
 
           $orders=DB::table('orders')
                 ->whereBetween('license_plate',[$license,$license2])
                 ->where('date', 'LIKE', '%' .$dt. '%')
                 ->orderBy('checkout_id', 'asc')
                 ->get();
-                if($license===$license2){
+
+          if($license===$license2){
                   $view_license_data=$license;
-                } else {
+                } 
+          else {
                   $view_license_data=$license." - ".$license2;
                 }
                 
@@ -139,16 +136,38 @@
         $datetime2=str_replace('/', '-', $to);
         $dt2=date("Y/m/d", strtotime($datetime2));
 
-        $orders=DB::table('orders')
+        
+
+            if($license===$license2){
+                $orders=DB::table('orders')
+                                ->where('license_plate', 'LIKE', '%' .$license. '%')
+                                ->whereBetween('date',[$dt." 00:00:01",$dt2." 23:59:59"])
+                                ->orderBy('checkout_id', 'asc')
+                                ->get();
+
+                $additionalreports=DB::table('additionalreports')
+                                ->where('license_plate', 'LIKE', '%' .$license. '%')
+                                ->whereBetween('date_time',[$dt." 00:00:01",$dt2." 23:59:59"])
+                                ->orderBy('checkout_id', 'asc')
+                                ->get();
+                                
+                  $view_license_data=$license;
+
+                } else {
+
+                  $view_license_data=$license." - ".$license2;
+                  $orders=DB::table('orders')
                 ->whereBetween('license_plate',[$license,$license2])
                 ->whereBetween('date',[$dt." 00:00:01",$dt2." 23:59:59"])
                 ->orderBy('checkout_id', 'asc')
                 ->get();
 
-            if($license===$license2){
-                  $view_license_data=$license;
-                } else {
-                  $view_license_data=$license." - ".$license2;
+                  $additionalreports=DB::table('additionalreports')
+                ->whereBetween('license_plate',[$license,$license2])
+                ->whereBetween('date_time',[$dt." 00:00:01",$dt2." 23:59:59"])
+                ->orderBy('checkout_id', 'asc')
+                ->get();
+
                 }
 
         echo '<div class="report_center" >
@@ -177,10 +196,16 @@
                             echo "</tr>";
                         
                             $total_price=0;
+                            $total_price2=0;
 
                             foreach ($orders as $order) {
-                              if($order->customer_id!=='9'){
-                                echo "<tr>";
+                              $product =DB::table('products')->where('product_id',$order->product_id )->first();
+
+                              if($order->customer_id==='9' || $product->product_type!=='1'){}
+
+                              else {
+
+                             echo "<tr>";
                              echo "<td>".$order->license_plate."</td>";
                              echo "<td>"."000".$order->checkout_id."</td>";
                              echo "<td>".$order->transaction_id."</td>"; 
@@ -207,14 +232,7 @@
                              }
                              
 
-                             // if(is_null($order->distance)){
-
-                             //    echo "<td><li><a href=".url('/definedistance/'.$order->id).">กำหนด</a></li></td>";
-
-                             // }else{
-
-                             //    echo "<td>".number_format($order->distance)."</td>";
-                             // }
+                          
                              
                              
                             
@@ -256,8 +274,86 @@
 
 
                              echo "</tr>";}
+
+}
+
+
+
+                            echo "<tr>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td><b>ราคารวมในตาชั่ง</b></td>";
+                            echo "<td>".$total_price."</td>";
+                            echo "</tr>";
+
+                            echo "<tr>";
+                            echo "<td>นอกตาชั่ง</td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "</tr>";
+
+
+
+                            foreach ($additionalreports as $additionalreport) 
+                            {
+                              echo "<tr>";
+                             echo "<td>".$additionalreport->license_plate."</td>";
+                             echo "<td>".$additionalreport->checkout_id."</td>";
+                             echo "<td>".$additionalreport->transaction_id."</td>"; 
+                             echo "<td>".$additionalreport->date_time."</td>";
+                             echo "<td></td>";
+                             echo "<td>".$additionalreport->customer_name."</td>"; 
+                             echo "<td>".$additionalreport->product_name."</td>";
+                        
                              
-                            }
+                             
+                            
+                             echo "<td>".number_format($additionalreport->car_weight)."</td>";
+                             echo "<td>".number_format($additionalreport->all_weight)."</td>";
+                             echo "<td>".number_format($additionalreport->total_weight)."</td>";
+                             echo "<td>".$additionalreport->unit."</td>";
+                             echo "<td></td>";
+                             $total_price2=$total_price2+$additionalreport->price;
+                             echo "<td>".$additionalreport->price."</td>";
+
+      
+                             echo "</tr>";
+                           }
+
+                           echo "<tr>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td></td>";
+                            echo "<td><b>ราคารวมนอกตาชั่ง</b></td>";
+                            echo "<td>".$total_price2."</td>";
+                            echo "</tr>";
 
                             echo "<tr>";
                             echo "<td></td>";
@@ -272,18 +368,25 @@
                             echo "<td></td>";
                             echo "<td></td>";
                             echo "<td><b>ราคารวม</b></td>";
-                            echo "<td>".$total_price."</td>";
+                            $summary_price=$total_price+$total_price2;
+                            echo "<td>".$summary_price."</td>";
                             echo "</tr>";
+
+                             
+                            
+
+
 
 
 
                         echo "</table>";
+    
 
 
 
 
-
-      }else echo "false";
+      }
+      else echo "";
       
             
 

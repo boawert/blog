@@ -61,7 +61,17 @@
                         <li><a href="{{ url('/') }}">Home</a></li>
                     @else
                     <li><a href="{{ url('/') }}">Home</a></li>
-                        <li><a href="{{ url('/uploadfile') }}">อัพเดตข้อมูลรายการ</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+                                อัพเดตข้อมูลรายการ <span class="caret"></span>
+                            </a>
+
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ url('/uploadfile') }}">ในตาชั่ง</a></li>
+                                  <li><a href="{{ url('/additionalreports') }}">นอกตาชั่ง</a></li>
+                                  </ul></li>
+
+                        <!-- <li><a href="{{ url('/uploadfile') }}">อัพเดตข้อมูลรายการ</a></li> -->
                         <li><a href="{{ url('/uploadproduct') }}">อัพเดตสินค้า</a></li>
                         <li><a href="{{ url('/uploadcustomer') }}">อัพเดตรายชื่อลูกค้า</a></li>
                         <li><a href="{{ url('/uploadprice') }}">อัพเดตราคา</a></li>
