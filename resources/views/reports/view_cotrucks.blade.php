@@ -211,7 +211,12 @@
                             }
 
                             foreach ($orders as $order) {
-                             echo "<tr>";
+
+                              $product =DB::table('products')->where('product_id',$order->product_id )->first();
+                              //if($order->customer_id==='9' || $product->product_type!=='1'){}
+                             // else {
+
+                                echo "<tr>";
                              echo "<td>".$order->license_plate."</td>";
                              echo "<td>"."000".$order->checkout_id."</td>";
                              echo "<td>".$order->transaction_id."</td>"; 
@@ -246,7 +251,11 @@
 
                              $carryprice=DB::table('carries')->where([['customer_id',$order->customer_id],['product_type',$product->product_type]])->first();
 
-                             $carryValue=DB::table('carry_values')->where('carry_id',$carryprice->id)->first();
+
+                             $yearmonthtoselect=(string)date("Y-m", strtotime(str_replace('/', '-', explode(" ",$order->date)[0])));
+
+                             $carryValue=DB::table('carry_values')
+                             ->where([['carry_id',$carryprice->id],['year_month', 'LIKE', '%' .$yearmonthtoselect. '%']])->first();
 
                              if($order->is_carry==0){
                                 
@@ -254,8 +263,8 @@
                                     echo "<td>ไม่ได้กำหนด</td>";
                                     echo "<td>-</td>";
                                 } else{
-                                    echo "<td>".$carryValue->notcarry_price."(ไม่แบก)</td>";
-                                    echo "<td>".number_format($carryValue->notcarry_price*$order->unit)."</td>";
+                                    echo "<td>".$carryValue->notcarry_price."</td>";
+                                    echo "<td>".$carryValue->notcarry_price*$order->unit."</td>";
 
                                     $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
                                 }
@@ -267,9 +276,9 @@
                                     echo "<td>ไม่ได้กำหนด</td>";
                                     echo "<td>-</td>";
                                 } else{
-                                    echo "<td>".$carryValue->notcarry_price."(แบก)</td>";
-                                    echo "<td>".number_format($carryValue->carry_price*$order->unit)."</td>";
-                                    $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
+                                    echo "<td>".$carryValue->carry_price."</td>";
+                                    echo "<td>".$carryValue->carry_price*$order->unit."</td>";
+                                    $total_price=$total_price+($carryValue->carry_price*$order->unit);
                                 }
                             }
                              
@@ -277,6 +286,10 @@
 
 
                              echo "</tr>";
+
+                             // }  
+
+                             
                              
 
                             }
@@ -293,7 +306,7 @@
                             echo "<td></td>";
                             echo "<td></td>";
                             echo "<td><b>ราคารวม</b></td>";
-                            echo "<td>".number_format($total_price)."</td>";
+                            echo "<td>".$total_price."</td>";
                             echo "</tr>";
 
                             // echo "<tr>";

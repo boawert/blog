@@ -243,7 +243,10 @@
 
                              $carryprice=DB::table('carries')->where([['customer_id',$order->customer_id],['product_type',$product->product_type]])->first();
 
-                             $carryValue=DB::table('carry_values')->where('carry_id',$carryprice->id)->first();
+                             $yearmonthtoselect=(string)date("Y-m", strtotime(str_replace('/', '-', explode(" ",$order->date)[0])));
+
+                             $carryValue=DB::table('carry_values')
+                             ->where([['carry_id',$carryprice->id],['year_month', 'LIKE', '%' .$yearmonthtoselect. '%']])->first();
 
                              if($order->is_carry==0){
                                 
@@ -264,9 +267,9 @@
                                     echo "<td>ไม่ได้กำหนด</td>";
                                     echo "<td>-</td>";
                                 } else{
-                                    echo "<td>".$carryValue->notcarry_price."(แบก)</td>";
+                                    echo "<td>".$carryValue->carry_price."(แบก)</td>";
                                     echo "<td>".$carryValue->carry_price*$order->unit."</td>";
-                                    $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
+                                    $total_price=$total_price+($carryValue->carry_price*$order->unit);
                                 }
                             }
                              

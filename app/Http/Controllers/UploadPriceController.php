@@ -58,6 +58,7 @@ class UploadPriceController extends Controller
                                 $available_carry_1=DB::table('carries')
                                 ->where([['customer_id',$row[0]],['product_type',1]])
                                 ->first();
+
                                 if(is_null($available_carry_1)){
                                     $carry=new Carry;
                                     $carry->customer_id=$row[0];
@@ -71,7 +72,7 @@ class UploadPriceController extends Controller
                                 ->first();
                                     
                                 $available_carry_value_1=DB::table('carry_values')
-                                ->where([['carry_id',$carry_data_1->id],['year_month',$save_excel[0][0]]])->first();
+                                ->where([['carry_id',$carry_data_1->id],['year_month', 'LIKE', '%'.$save_excel[0][0].'%']])->first();
 
                                 if(is_null($available_carry_value_1)){
 
@@ -84,12 +85,13 @@ class UploadPriceController extends Controller
 
 
                                 }else {
+
                                     DB::table('carry_values')
-                                        ->where([['carry_id',$carry_data_1->id],['product_type',1],['year_month',$save_excel[0][0]]])
+                                        ->where([['carry_id',$available_carry_value_1->carry_id],['year_month', 'LIKE', '%'.$save_excel[0][0].'%']])
                                         ->update(['carry_price' => $row[2]]);
 
-                                        DB::table('carry_values')
-                                        ->where([['carry_id',$carry_data_1->id],['product_type',1],['year_month',$save_excel[0][0]]])
+                                    DB::table('carry_values')
+                                        ->where([['carry_id',$available_carry_value_1->carry_id],['year_month', 'LIKE', '%'.$save_excel[0][0].'%']])
                                         ->update(['notcarry_price' => $row[3]]);
                                 }
 
@@ -124,11 +126,11 @@ class UploadPriceController extends Controller
 
                                 }else {
                                     DB::table('carry_values')
-                                        ->where([['carry_id',$carry_data_1->id],['product_type',2],['year_month',$save_excel[0][0]]])
+                                        ->where([['carry_id',$carry_data_1->id],['year_month',$save_excel[0][0]]])
                                         ->update(['carry_price' => $row[4]]);
 
                                         DB::table('carry_values')
-                                        ->where([['carry_id',$carry_data_1->id],['product_type',2],['year_month',$save_excel[0][0]]])
+                                        ->where([['carry_id',$carry_data_1->id],['year_month',$save_excel[0][0]]])
                                         ->update(['notcarry_price' => $row[5]]);
                                 }
 
@@ -162,11 +164,11 @@ class UploadPriceController extends Controller
 
                                 }else {
                                     DB::table('carry_values')
-                                        ->where([['carry_id',$carry_data_3->id],['product_type',3],['year_month',$save_excel[0][0]]])
+                                        ->where([['carry_id',$carry_data_3->id],['year_month',$save_excel[0][0]]])
                                         ->update(['carry_price' => $row[6]]);
 
                                         DB::table('carry_values')
-                                        ->where([['carry_id',$carry_data_3->id],['product_type',3],['year_month',$save_excel[0][0]]])
+                                        ->where([['carry_id',$carry_data_3->id],['year_month',$save_excel[0][0]]])
                                         ->update(['notcarry_price' => $row[7]]);
                                 }
 
