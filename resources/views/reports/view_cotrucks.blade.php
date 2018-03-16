@@ -213,8 +213,11 @@
                             foreach ($orders as $order) {
 
                               $product =DB::table('products')->where('product_id',$order->product_id )->first();
-                              //if($order->customer_id==='9' || $product->product_type!=='1'){}
-                             // else {
+                             if($order->customer_id==='9' || $product->product_type=='2'){
+
+                              }
+
+                              else {
 
                                 echo "<tr>";
                              echo "<td>".$order->license_plate."</td>";
@@ -287,7 +290,7 @@
 
                              echo "</tr>";
 
-                             // }  
+                              }  
 
                              
                              
