@@ -256,7 +256,7 @@
                                     echo "<td>ไม่ได้กำหนด</td>";
                                     echo "<td>-</td>";
                                 } else{
-                                    echo "<td>".$carryValue->notcarry_price."(ไม่แบก)</td>";
+                                    echo "<td>".$carryValue->notcarry_price."</td>";
                                     echo "<td>".$carryValue->notcarry_price*$order->unit."</td>";
 
                                     $total_price=$total_price+($carryValue->notcarry_price*$order->unit);
@@ -269,7 +269,7 @@
                                     echo "<td>ไม่ได้กำหนด</td>";
                                     echo "<td>-</td>";
                                 } else{
-                                    echo "<td>".$carryValue->carry_price."(แบก)</td>";
+                                    echo "<td>".$carryValue->carry_price."</td>";
                                     echo "<td>".$carryValue->carry_price*$order->unit."</td>";
                                     $total_price=$total_price+($carryValue->carry_price*$order->unit);
                                 }
